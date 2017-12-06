@@ -28,6 +28,17 @@ The first step we took in data cleaning was to merge the two files. We merged on
 
 ![](Clean1.png)
 
+We knew that this was still a huge data set to work with and it contained a lot of duplicaties. Thus we moved on to further clean the data by reducing the data to just include the general election by removing instances of “PPP (special, local, etc.), “PRI” (Primary Elections), and “OTH” (Other). The data was reduced to include only general elections because historically the the general election has the highest turnout and because Florida has a closed primary which heavily affect the primary elections voter turnout. Below is an image of what the data set looked like after this cleaning. 
+
+![](Clean2.png)
+
+As you can see  above Jaqueline votes frequently thus appear multiple time in the data set thus our next step was to intelligently had these duplicates such that each voter has only a single row! In order to do this we created column for each general election i.e "GEN16" and "GEN12" and indicated in this column whether the individual voted or not. This voted or not was determined by looking at the typeofvote section and filling it in the correct election column. Futhermore NaN were not removed as they represent individual that registered but did not vote which we thought was relevant thus NaN were instead turned into 0 and a vote was turned into 1 as shown in the secon image below.
+
+![](Clean3.png)
+
+![](Clean4.png)
+
+Upon doing the above clean where an individual would have a 1 if he or she voted, made us notice some inconsitencies in teh data where we notice that individual can move district or switch political parties in between two election i.e general 2012 and general 2016. Thus we decide to employ the same clean method as described above but focus solely on 2016 thus removing the issue of voter changing district or parties. However, given more time we would like to look at each individual year i.e 2012. Lastly we choose to subsample the 10 million+ rows data set into a 100 000 samples, as logistic regression is a parametric test requiring a large sample size. We will also be using a large number of dummy variables, so our sample size needed to be larger than our number of predictors. 
 
 #### EDA
 
