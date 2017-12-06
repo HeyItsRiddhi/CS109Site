@@ -38,9 +38,23 @@ As you can see  above Jaqueline votes frequently thus appear multiple time in th
 
 ![](Clean4.png)
 
-Upon doing the above clean where an individual would have a 1 if he or she voted, made us notice some inconsitencies in teh data where we notice that individual can move district or switch political parties in between two election i.e general 2012 and general 2016. Thus we decide to employ the same clean method as described above but focus solely on 2016 thus removing the issue of voter changing district or parties. However, given more time we would like to look at each individual year i.e 2012. Lastly we choose to subsample the 10 million+ rows data set into a 100 000 samples, as logistic regression is a parametric test requiring a large sample size. We will also be using a large number of dummy variables, so our sample size needed to be larger than our number of predictors. 
+Upon doing the above clean where an individual would have a 1 if he or she voted, made us notice some inconsitencies in teh data where we notice that individual can move district or switch political parties in between two election i.e general 2012 and general 2016. Thus we decide to employ the same clean method as described above but focus solely on 2016 thus removing the issue of voter changing district or parties. However, given more time we would like to look at each individual year i.e 2012. In addition, based off of "date of birth" we decided to add a column called age tot he data set so that we can see how voter turnout in various ethnicities varies later in our model. Lastly we choose to subsample the 10 million+ rows data set into a 100 000 samples, as logistic regression is a parametric test requiring a large sample size. We will also be using a large number of dummy variables, so our sample size needed to be larger than our number of predictors. 
+
+Below shows is an image of our data with the newly created age column:
+
+![](Clean5.png)
 
 #### EDA
+
+Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout. 
+
+Below is a graph show the voter turnout based on gender in the 2016 Florida general election. Based off this data we can immediately see that slightly more women voted then men in 2016, perhaps this has something to do with the candidates thoguh we won't talk about that here. 
+
+![](GenderPlot.png)
+
+Next we looked explore how different age group voted and noticed that as the age group increased the percentage of voter turnout increased with a dramatic increase between the "under 35" age group and the "35 to 45" age group and a slight increase in all age groups after. 
+
+
 
 ## Section Name
 #### Subsection
