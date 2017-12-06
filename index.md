@@ -10,7 +10,12 @@ The figure below shows the diversity of Florida:
 
 ## Data Exploration
 
+The data for this project came from census data for the state of Florida but the quite extensive and spilt into two data files thus we need to merge the relevant data from both files into a single file. 
+
 #### Data Gathering
+
+The first data set contained information about "Voter History" from the past 85 elections in Florida from 2006 - 2016. This data set contained variables for when the individual vote i.e general election, their district and type of vote. Below is an example of what the data looked like in this data set. 
+
 #### Data Cleaning
 #### EDA
 
