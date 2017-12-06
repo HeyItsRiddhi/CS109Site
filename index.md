@@ -1,14 +1,19 @@
 ## Introduction
 
-You can use the [editor on GitHub](https://github.com/HeyItsRiddhi/CS109Site/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+Welcome to Voter Turnout CS109 Data Science Project with this project we choose to look at minority ethinicity's voter turnout in elections and build a prodiction model that can predict minority ethnicity turn outs for future elections! Due to the time constraints as well as the limitation of data available in about some states i.e paying for state data we choose a swing state as the focus of our project. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+We choose Florida as it has a diverse population throughout the state which makes it a good representative of the country. and Different districts in Florida have different build up of ethinicities such that some district are predominately white whilt other are majority minorities. 
+
+The figure below shows the diversity of Florida:
+
+![](FloridaMinority.jpg)
+
 ## Data Exploration
 
 #### Data Gathering
 #### Data Cleaning
 #### EDA
-![](FloridaMinority.jpg)
+
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
