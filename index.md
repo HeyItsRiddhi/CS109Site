@@ -8,7 +8,7 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 #### Data Gathering
 #### Data Cleaning
 #### EDA
-![](https://github.com/HeyItsRiddhi/CS109Site/edit/master/images/FloridaMinority.jpg)
+![](FloridaMinority.jpg)
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
