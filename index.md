@@ -54,6 +54,23 @@ Below is a graph show the voter turnout based on gender in the 2016 Florida gene
 
 Next we looked explore how different age group voted and noticed that as the age group increased the percentage of voter turnout increased with a dramatic increase between the "under 35" age group and the "35 to 45" age group and a slight increase in all age groups after. 
 
+![](AgePlot.png)
+
+Then we moved on to see the vovter turnout per district, to see if particular district had significantly higher or lower turnout then others in the state. From this exploration we found LIB had the highest voter turnout in Florida's 2016 general election and GLA had the lowest. 
+
+![](DistrictPlot.png)
+
+Next, we looked at the type of vote distribution in the 2016 election and notice that most individuals registered did intend vote and that most individual voted at the polls, while 31% voted early and 28.3 voted absentee. Essentially, difference betweent the types of voting methods was not significant but it is important to note thata small fraction of registered voter did not vote.
+
+![](TypeVotePlot.png)
+
+Lastly, we looked at the breakdown of voters by "race" and the the percentage of each race that voted. This showed that a high percentage of White, non hispanics voted and but this proporation was not significantly higher then the proportion that voted in other ethinicties. Plot 1 below show the racial make up of the voter of Florida and Plot two shows the proportion of each race that voted.
+
+![](RacePlot1.png)
+![](RacePlot2.png)
+
+
+
 
 
 ## Section Name
