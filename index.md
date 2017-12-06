@@ -16,36 +16,20 @@ The data for this project came from census data for the state of Florida but the
 
 The first data set contained information about "Voter History" from the past 85 elections in Florida from 2006 - 2016. This data set contained variables for when the individual vote i.e general election, their district and type of vote. Below is an example of what the data looked like in this data set. 
 
+![](VoterHistoryDS.png)
+
+The second data set contained information about the voter such as his or her address, district, date of birth and so on.Below is an example of what the data looked like in this data set. How ever a lot of there columns were data that could be derieved from other columns, duplicates or data thatnot predictive of voter turn out thus moved on to clean the data to make it focused.
+
+![](VoterRegDS.png)
+
 #### Data Cleaning
+
+The first step we took in data cleaning was to merge the two files. We merged on id as upon look at the two data sets we saw that each voter had an id which was unique and this id was in both file to represent that particular voter. This merge was also done to capture all registered voters in the state regardless of whether he/she voted in a particular election. If the individual did not vote he/she would have an NaN under the election data column (number 22 below). Upon merging we have 250 million rows of voters for the entire state so we quickly moved on to drop column that we deemed were represented by other column or not predictive of voter turn out. For example we dropped street address as it is not really relevant to whether the individual will voter and is specific to each voter whereas we kept zip code because sip code can represent entire demographic or ethnicity and thus can play a role in voter turn out. Similiarly we dropped middle name as we already have id to indetify the use and first and last name thus keeping it would be repeatitive. Below is an image of the data frame after this cleaning.
+
+![](Clean1.png)
+
+
 #### EDA
 
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/HeyItsRiddhi/CS109Site/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Section Name
+#### Subsection
