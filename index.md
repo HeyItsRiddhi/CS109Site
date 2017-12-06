@@ -69,9 +69,17 @@ Lastly, we looked at the breakdown of voters by "race" and the the percentage of
 ![](RacePlot1.png)
 ![](RacePlot2.png)
 
+## Models
 
+All models were built using exclusively our 100,000 sample from the Florida dataset. This was done by using a sample representative of the population.
 
+#### Logistic Regression
 
+Our analysis uses the following variables in different analysis: District, political party, age, and gender and race to predict voter turnout. The result of this is included in Table X.  
 
-## Section Name
-#### Subsection
+These analyses were conducted using the 100,000 sample gathered in the data cleaning process.  While our 100,000 sample had 431 missing values in our “age” variable, a further look demonstrated that no more than 3% of any district was missing age. Most districts were missing less than 1%, while Washington County (WAS) was missing 3%. This suggests that the missing data is fairly evenly distributed across our counties, and relatively few instances, so we feel comfortable dropping these registered voters (rows). The only other rows containing missing values were columns dropped (like “First Name”). Dummy variables were implemented for categorical variables with more than 2 options (for example, gender was not a dummy variable).  All logistic regressions were performed with  5- fold cross validation with different alphas (1, 10, 100, 10000, or 100000) and L2 regularization. The scoring metric was “area under the curve.” 
+
+#### Assumptions of Logistic Regression
+
+Logistic regression requires the dependent variable to be binary. Here, we are predicting whether of not a given person voted in the 2016 general election. The independent variables should be independent of each other. That is, the model should have little or no multicollinearity. The independent variables are linearly related to the log odds. Logistic regression requires quite large sample sizes, as the number of samples needs to exceed the number of prodictors (after dummy varibales are created)
+Because logistic regression uses MLE rather than OLS, it avoids many of the typical assumptions tested in statistical analysis. Does not assume normality of variables (both DV and IVs). Does not assume linearity between DV and IVs. Does not assume homoscedasticity. Does not assume normal errors. MLE allows more flexibility in the data and analysis because it has fewer restrictions.
