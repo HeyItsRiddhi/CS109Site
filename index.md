@@ -267,4 +267,63 @@ Here on, our Baseline Ethnicity Imputer may be referred to as the “Old Ethnici
 
 ## 4 / Voter Turnout Prediction Models
 
+We aim to build a model for voter turnout that classifies whether or not a registered voter casted a ballot in the 2016 election. We explore a total of four classifiers using a training and validation set: Logistic Regression, Decision Tree, Random Forest, and AdaBoost. These four models are described below, and each performance on the validation set is included in table X. The final chosen model, our Adaboost model received a score of .817 on the test set
+
+### The Logistic Model
+
+Binary Logistic Regression is a type of regression where the binary response variable is predicted given a set of discrete and/or continuous explanatory variables. Within this analysis, we predict voter turnout (discrete- 0/1) from variables including age (continuous), political party (categorical), district (categorical), gender (categorical), race/ethnicity (categorical).  Our continuous variable, age, was standardized to prevent the larger ranges from weighting greater importance in the analysis. 
+
+Our model predicts the probability that the given voter turned-out to the polls in the 2016 election based on combination of values taken by the predictors, and then uses this probability to classify each voter.  The logistic model is written as:  
+
+![](kimia1.png)
+
+
+where the value inside the log function is the "odd" or the probability of a classification. Similar to linear regression, B0 serves as our y intercept, and each coefficient (Bj) is the association between the jth variable/predictor (X) and the response (on the log odds scale).
+
+#### Regularization and Cross Validation
+
+In the analysis below, a total of four logistic regressions were run on the training and validation set. The testing set is only run once we have finalized our model selection. Each logistic model used regularization and cross validation to optimize the model’s performance. 
+
+Regularization is sometimes thought of as “Occam’s razor” for model fitting: given any given set of explanations for a result, it is most likely that the simplest one is the correct one. Regularization is used in this analysis to penalize unnecessary variables contributing to the model by balancing the best fit model with model complexity in the loss function. The loss function optimizes the accuracy of predictions. 
+
+In our models, we use a type of regularization called L2 regularization. This method adds the “squared magnitude” of each coefficient as penalty term to the loss function, thus penalizing larger models. Our largest model uses a total of 98 predictors (though our training set is 7870 rows). The regularization parameter (lambda) can be thought of a weight for how harshly it penalizes larger models. It reduces overfitting, which reduces the variance of the estimated regression parameters but it adds bias to the estimate. In our analysis, lambda was tuned tuned between 1, 10, 100, 1000, 10000, and 100000 using cross validation. 
+
+Regularization is particularly important when predictors are correlated, and when the sample size is not significantly largely than your predictors. These are particularly important to the assumptions of logistic regression. 
+
+Our analysis breaks as there are high intercorrelations (multicollinearity) among the predictors. Ethnicity and race are often either correlated or heavily uncorrelated, as seen in the figure below. Therefore, we use l2 regularization to allows the model to downweight unnecessary predictors. 
+
+![](kimia2.png)
+
+**Figure X**: As expected, certain ethnicities and races are highly correlated. Example include the self reported race “white” with predicted ethnicities 'Jewish' and ‘West European’, and self reported race “Black” with predicted ethnicities 'Black American', 'Continental African', and 'Black Muslim'. Other ethnicities are negatively correlated. Examples include the self reported  race “Hispanic” with predicted 'Jewish' 'West European', and 'Black American.'
+
+
+#### Our Logistic Analysis
+Four logistic regression models were built to predict voter turnout using a mixture of the following variables: District, political party, standardized age, and gender and race. Dummy variables were implemented for categorical variables with more than 2 options (for example, gender was not a dummy variable). All logistic regressions were performed with 5- fold cross validation with different regularization parameters (1, 10, 100, 1000, 10000, and 100000). The result of this is included in Table X. 
+
+![](kimia3.png)
+
+**Table X**: Here we can see the impact of certain variables on AUC scores. Note that ethnicity and race can be interchanged as they are highly correlated. When you add both race and ethnicity in the same model, our regularization controls for the correlation between these variables and the AUC is similar to having either/or. 
+
+We then analyzed how many of the beta coefficients estimated by the multiple logistic regression are significantly different from zero at a significance level of 95%? The table below was calculated by bootstrapping with 100 bootstrap samples/iterations. It is important to note that ethnicity is not included in this. Of the self-report races, only “White” and “Unknown” races are shown to have a relationship with voter turnout. “White” has a positive relationship with turnout while “Unknown” has a negative. 
+
+**Table Y**: The following predictors had beta coefficients estimated by the multiple logistic regression that were significantly different from zero at a significance level of 95%. Note that ethnicity is not included in the table, and instead self-reported “White” race has a positive relationship with voter turnout while “Unknown” race has a negative relationship with voter turnout. 
+
+![](kimia4.png)
+
+### Decision Tree Model
+
+A decision tree is a model that splits differences comparing values predicted against thresholds. In other words, a binary decision is made that "branches" the classifier into two directions where eventually the data will be split into the classified dependent variable. This model is often favored as it is easily interpreted: the feature importance is clear and relations can be viewed easily. Unlike the logistic regression explained above, decision trees don't make assumptions regarding the distribution of the data as they are nonparametric. The depth of the decision tree determines the range of leaves the tree can have, or the layers deep.
+
+We built three decision trees with depths between 2 and 20 using “Gini” as the splitting criterion while fitting the decision tree. The decision trees ran on three separate dataframes: one with no ethnicity, one with the older ethnicity prediction, and the newer ethnicity prediction.  No ethnicity classifier and the older ethnicity classifier had a depth of 3, while the new predictions had a depth of 2. The Gini Index was used to compute the impurity of a data partition. Given the size of our dataset, we chose the gini index as it is less computationally intensive as entropy as it lacks the logarithmic function.  A depth of three prevents overfitting, as shown in the figure below:
+
+![](kimia5.png)
+
+Figure Y: In picking the optimal depth, one should look at the validation set to prevent overfitting. 
+
+The decision trees performed similarly regardless of whether we used the new ethnicity classifier, the old ethnicity classifier, or any ethnicity at all. In all three cases, they received a score of about 70% accuracy. This makes sense as we can see from our decision tree below that that ethnicity is not a factor included for the first few splits. Instead, age and whether someone is an independent voter (No Party Affiliation - NPA)  are the biggest factors. 
+
+![](kimia6.png)
+
+< Add William's work here > 
+
 ## 5 / Conclusions
