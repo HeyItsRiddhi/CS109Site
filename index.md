@@ -350,9 +350,9 @@ AdaBoost is quite useful and simple. It only requires selecting the kinds of tre
 
 We utilized 5-fold cross validation to determine the optimal parameters used in AdaBoost, helping to prevent overfitting. Optimal depth was determined to be 2 and the number of trees was determined to be 64. Ultimately, AdaBoost yielded the most accurate results, with 0.844 on the first test set and 0.812 on the second.
 
-![](Adaboost1.png)
+![](ADB1.png)
 
-![](Adaboost2.png)
+![](ADB2.png)
 
 ![](Adaboost3.png)
 
