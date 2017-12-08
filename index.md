@@ -359,7 +359,7 @@ Though there were many robust classification techniques used in this project, th
 
 While the large amount of data available provides a lot of information and gives robustness to our conclusions, it makes it easier to generalize about a specific group of people (e.g. knowing that 80% of registered voters between 30 and 40 voted), but does not necessarily give insights on individual voting behavior.  Additionally, the dataset built with the conservative ethnicity classifier may have performed poorly on the validation because it was not representative of the population. The “abstain” predictions were dropped to allow the model to have a highly precise sample of each ethnicity (though low recall). Therefore, the predicted ethnic groups are representative of those ethnic minorities but together the dataset was not representative of the overall population (as it is highly precise with low recall). 
 
-![](TestSet1.png)
+![](last.png)
 
 ## 5 / Conclusions
 
