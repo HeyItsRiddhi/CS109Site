@@ -374,4 +374,11 @@ However, our analysis was not exhaustive and interaction effects were not consid
 
 Future analysis should focus on the interaction effects of ethnicities and races with demographics (like age, political party, etc) and household income (by person and district). Comparing subgroups (i.e. white v minority, 2012 election v 2016 election) may be more informative for future models. Additionally, future analysis should assess the confidence at which classifications are being made (and seeing if classifications made with greater confidence are actually more accurate, which could suggest that a certain combination of factors may impact turnout. 
 
+## 6/ Citations:
+
+Ambekar, A., Ward, C., Mohammed, J., Male, S., & Skiena, S. (2009, June). Name-ethnicity classification from open sources. In Proceedings of the 15th ACM SIGKDD international conference on Knowledge Discovery and Data Mining (pp. 49-58). ACM.
+
+Pervouchine, V., Zhang, M., Liu, M., & Li, H. (2010, August). Improving name origin recognition with context features and unlabelled data. In Proceedings of the 23rd International Conference on Computational Linguistics: Posters (pp. 972-978). Association for Computational Linguistics.
+
+
 
