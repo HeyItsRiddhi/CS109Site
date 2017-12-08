@@ -141,11 +141,6 @@ Other researchers have used MaxEnt multinomial logistic regressions (Pervouchine
 
 A MaxEnt model seems like a reasonable approach for us to start with, given that we have learned the intuitions behind multinomial logit regressions in class, and given that the research community prefers it.
 
-Citations:
-
-* Ambekar, A., Ward, C., Mohammed, J., Male, S., & Skiena, S. (2009, June). Name-ethnicity classification from open sources. In Proceedings of the 15th ACM SIGKDD international conference on Knowledge Discovery and Data Mining (pp. 49-58). ACM.
-* Pervouchine, V., Zhang, M., Liu, M., & Li, H. (2010, August). Improving name origin recognition with context features and unlabelled data. In Proceedings of the 23rd International Conference on Computational Linguistics: Posters (pp. 972-978). Association for Computational Linguistics.
-
 #### Choosing the Data
 There are a couple of ways to get lists of names paired with ethnicity. Some solutions include:
 
