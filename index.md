@@ -9,8 +9,8 @@ Our goal is to build a classification model that predicts an individual’s vote
 Can we:
 1. Use a baseline model, built only with data given by the state of Florida, that predicts an individual’s voter turnout? 
 2. Enhance this prediction model by imputing ethnicity
-- Imputation of a person’s ethnicity using a more general classification (i.e. Jewish, Western European, etc). 
-- Imputation of a person’s ethnicity using more precise ethnicity and 
+- Imputation of a person’s ethnicity using a more general classification (i.e. Jewish, Western European, etc.) 
+- Imputation of a person’s ethnicity using more precise ethnicity (i.e. Asian Muslim, Blackamerican, etc.)  
 3. Determine which variables are most useful in predicting voter turnout
 4. See voter turnout trends between demographic groups / ethnicities
 
