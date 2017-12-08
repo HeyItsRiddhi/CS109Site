@@ -350,6 +350,12 @@ AdaBoost is quite useful and simple. It only requires selecting the kinds of tre
 
 We utilized 5-fold cross validation to determine the optimal parameters used in AdaBoost, helping to prevent overfitting. Optimal depth was determined to be 2 and the number of trees was determined to be 64. Ultimately, AdaBoost yielded the most accurate results, with 0.844 on the first test set and 0.812 on the second.
 
+![](Adaboost1.png)
+
+![](Adaboost2.png)
+
+![](Adaboost3.png)
+
 ### The Test Set 
 
 We chose Adaboost to run our final test data, as it consistently performed the highest on validation sets across all three datasets: without race, with ethnicity, and with our finer-grained ethnicity tool in both the test and validation set. This suggests that race and ethnicity are not significant predictors in classifying someone as having turned out to the voting booth. 
@@ -358,7 +364,7 @@ Though there were many robust classification techniques used in this project, th
 
 While the large amount of data available provides a lot of information and gives robustness to our conclusions, it makes it easier to generalize about a specific group of people (e.g. knowing that 80% of registered voters between 30 and 40 voted), but does not necessarily give insights on individual voting behavior.  Additionally, the dataset built with the conservative ethnicity classifier may have performed poorly on the validation because it was not representative of the population. The “abstain” predictions were dropped to allow the model to have a highly precise sample of each ethnicity (though low recall). Therefore, the predicted ethnic groups are representative of those ethnic minorities but together the dataset was not representative of the overall population (as it is highly precise with low recall). 
 
-
+![](TestSet1.png)
 
 ## 5 / Conclusions
 
