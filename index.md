@@ -100,7 +100,7 @@ In this particular study, NaNs are data-rich. For example, NaNs in the column â€
 
 #### Exploratory Data Analysis (EDA)
 
-Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout. Our EDAs were the first cue that we lacked a representative sample in milestone 3. 
+Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout. Our EDAs were the first cue that we lacked a representative sample in milestone 3. It is important to note that the EDAs were generated on the 100,000 training and validation set, which contained very little variance. 
 
 Below is a graph show the voter turnout based on gender in the 2016 Florida general election. Based off this data we can immediately see that slightly more women voted than men in 2016 (perhaps this has something to do with the candidates though we won't talk about that here).
 
