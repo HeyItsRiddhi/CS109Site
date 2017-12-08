@@ -1,15 +1,19 @@
 ## 1 / Problem Statement and Motivation
 
-Welcome to the Voter Turnout CS109 Data Science Project. Race and ethnicity have long played a role in American politics. While white or caucasian turnout to the voting polls has eclipsed minority turnout for centuries, minorities hit historic turnout during President Barack Obama’s presidential election. This increased focused on ethnicities and race in predicting election results is compounded by the growing diversity of our nation’s population. 
+Welcome to the Voter Turnout CS109 Data Science Project. Race and ethnicity have long played a role in American politics. While white or caucasian turnout to the voting polls has eclipsed minority turnout for centuries, minorities hit historic turnout during President Barack Obama’s presidential election. This increased focused on ethnicities and race in predicting election results is compounded by the growing diversity of our nation’s population.
 
 Our goal is to build a classification model that predicts an individual’s voter turnout in the general election, given a set of features that are available in or can be derived from public voting records. Specifically, we want to draw conclusions about and better understand the voting behaviors of minorities.
 
+
 #### Problem Statement 
 Can we:
-1. Use a baseline model, built only with data given by the state of Florida,  that predicts an individual’s voter turnout? 
+1. Use a baseline model, built only with data given by the state of Florida, that predicts an individual’s voter turnout? 
 2. Enhance this prediction model by imputing ethnicity
+- Imputation of a person’s ethnicity using a more general classification (i.e. Jewish, Western European, etc). 
+- Imputation of a person’s ethnicity using more precise ethnicity and 
 3. Determine which variables are most useful in predicting voter turnout
-4. See how voter turnout trends between demographic groups / ethnicities
+4. See voter turnout trends between demographic groups / ethnicities
+
  
 #### Motivations
 
@@ -18,6 +22,7 @@ Can we:
 **Ethnicity**: Politicians often view ethnicities as blocs of people with similar political attitudes. For example, George W. Bush ran a series of famous Spanish-language ads in Florida in the 2000 election, to win over the “Latino vote”. We want to test the assumptions that politicians have about the voting behaviors of different ethnicities.
 
 **Florida**: We chose Florida as our state of analysis because (1) it is a swing state, (2) it is very diverse, with a sizeable minority population, (3) has differences in voting behavior among its counties. Also, the State of Florida makes their voting records available to the public for free, so that’s a plus (as other states often charge above $1000 for their voter files).
+
 
 ## 2 / Introduction and Description of Data
 
@@ -42,7 +47,7 @@ Through an official public information request to the Florida government, we had
 The figure below shows the racial diversity of Florida:
 
 ![](FloridaMinority.jpg)
-Southern Florida is diverse (large minority populations) while the counties north tend to vary or be predominantly white.
+Each zip code is colored by the percent minority registered voters. As you can see, south Florida has almost entirely minority communities. Southern Florida is diverse (large minority populations) while the counties north and inland tend to vary or be predominantly white.
 
 #### Voter Records: 2 Parts
 
@@ -55,7 +60,7 @@ This contains personal information about the voter, such as their address, distr
 
 Many of these columns (like Precinct, District, City, & Zip Code) could be derived from each other and had limited unique predictive value, so we eliminated them. There were other columns (like Phone Number and Email Address) that would not have helped us predict either, so they were eliminated.
 
-These datasets were huge (>10GB) so eliminating redundant columns was an important step to make sure we don’t max out our RAM when doing operations.
+These datasets were huge (>10GB) so eliminating redundant columns was an important step to make sure we don’t max out our RAM when doing operations. As one may expect, the size of the dataset caused us to accidentally collect a sample that was not representative of the population. The data cleaning had to be performed prior to sampling. Given the size of the data, the cleaning took approximately two days. 
 
 ##### Voter History
 
