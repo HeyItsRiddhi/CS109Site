@@ -156,7 +156,7 @@ Weaknesses of the baby names data source include:
 * Exclusion of less common names not associated with ethnicity
 
 Below are the ethnicities and the number of names we had for each:
-![](eth1.png)
+![](Etable.png)
 
 #### Preparing the name-ethnicity data
 
