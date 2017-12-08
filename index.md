@@ -309,7 +309,7 @@ Four logistic regression models were built to predict voter turnout using a mixt
 
 ![](kimia3.png)
 
-**Table X**: Here we can see the impact of certain variables on AUC scores. Note that ethnicity and race can be interchanged as they are highly correlated. When you add both race and ethnicity in the same model, our regularization controls for the correlation between these variables and the AUC is similar to having either/or. 
+**Table X**: Here we can see the impact of certain variables on AUC scores. Note that ethnicity and race can be interchanged as they are highly correlated. When you add both race and ethnicity in the same model, our regularization controls for the correlation between these variables and the AUC is similar to having either/or. Note that the accuracy score for the conservative ethnicity predictor is especially low, while the AUC is reasonable. This is likely due to the high precision and low recall that resulted from removing the "abstain" voters. This is not representative of the population. When the model was placed on the test set, it performs very poorly. 
 
 We then analyzed how many of the beta coefficients estimated by the multiple logistic regression are significantly different from zero at a significance level of 95%? The table below was calculated by bootstrapping with 100 bootstrap samples/iterations. It is important to note that ethnicity is not included in this. Of the self-report races, only “White” and “Unknown” races are shown to have a relationship with voter turnout. “White” has a positive relationship with turnout while “Unknown” has a negative. 
 
