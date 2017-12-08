@@ -1,85 +1,270 @@
-## Introduction
+## 1 / Problem Statement and Motivation
 
-Welcome to Voter Turnout CS109 Data Science Project with this project we choose to look at minority ethinicity's voter turnout in elections and build a prodiction model that can predict minority ethnicity turn outs for future elections! Due to the time constraints as well as the limitation of data available in about some states i.e paying for state data we choose a swing state as the focus of our project. 
+Welcome to the Voter Turnout CS109 Data Science Project. Race and ethnicity have long played a role in American politics. While white or caucasian turnout to the voting polls has eclipsed minority turnout for centuries, minorities hit historic turnout during President Barack Obama’s presidential election. This increased focused on ethnicities and race in predicting election results is compounded by the growing diversity of our nation’s population. 
 
-We choose Florida as it has a diverse population throughout the state which makes it a good representative of the country. and Different districts in Florida have different build up of ethinicities such that some district are predominately white whilt other are majority minorities. 
+Our goal is to build a classification model that predicts an individual’s voter turnout in the general election, given a set of features that are available in or can be derived from public voting records. Specifically, we want to draw conclusions about and better understand the voting behaviors of minorities.
 
-The figure below shows the diversity of Florida:
+#### Problem Statement 
+Can we:
+1. Use a baseline model, built only with data given by the state of Florida,  that predicts an individual’s voter turnout? 
+2. Enhance this prediction model by imputing ethnicity
+3. Determine which variables are most useful in predicting voter turnout
+4. See how voter turnout trends between demographic groups / ethnicities
+ 
+#### Motivations
+
+**Voter-turnout**: This is the ultimate measure of political participation in America. By researching what factors affect voter-turnout, we also learn about which members of our electorate are the most politically engaged, and how various demographic features shape individuals’ political-activeness.
+
+**Ethnicity**: Politicians often view ethnicities as blocs of people with similar political attitudes. For example, George W. Bush ran a series of famous Spanish-language ads in Florida in the 2000 election, to win over the “Latino vote”. We want to test the assumptions that politicians have about the voting behaviors of different ethnicities.
+
+**Florida**: We chose Florida as our state of analysis because (1) it is a swing state, (2) it is very diverse, with a sizeable minority population, (3) has differences in voting behavior among its counties. Also, the State of Florida makes their voting records available to the public for free, so that’s a plus (as other states often charge above $1000 for their voter files).
+
+## 2 / Introduction and Description of Data
+
+#### High-level Overview
+
+We will explore and test our hypothesis through the following method:
+
+* Initial EDA
+* Create a turnout prediction **baseline model** (that predicts based on the dataset)
+* Create an ethnicity imputer (that classifies an ethnicity based on name)
+* Test to see if the imputed ethnicity enhances our turnout prediction (**ensemble model**)
+* Optimize ethnicity imputation and turnout prediction models to increase performance
+
+![](ModelOverview.png)
+
+One of our **central hypotheses** is that the imputation of ethnicity can strengthen our model in a significant way, because of the cultural propensities between ethnic groups. We are not sure if this is the case, but it is an intuition that many politicians hold, so it is worth testing. Our research here will hopefully offer some insight.
+
+#### Our Dataset: Florida Voting Records
+
+Through an official public information request to the Florida government, we had acquired the complete voting records for the State of Florida for the past 11 years. Florida was an ideal choice for analysis because its diversity in political attitude, minority composition, and easy-to-obtain data.
+
+The figure below shows the racial diversity of Florida:
 
 ![](FloridaMinority.jpg)
+Southern Florida is diverse (large minority populations) while the counties north tend to vary or be predominantly white.
 
-## Data Exploration
+#### Voter Records: 2 Parts
 
-The data for this project came from census data for the state of Florida but the quite extensive and spilt into two data files thus we need to merge the relevant data from both files into a single file. 
+For each county, we have two files: (1) a **Voter Registration record**, and (2) a **Voter History record**.
 
-#### Data Gathering
+##### Voter Registration
 
-The first data set contained information about "Voter History" from the past 85 elections in Florida from 2006 - 2016. This data set contained variables for when the individual vote i.e general election, their district and type of vote. Below is an example of what the data looked like in this data set. 
+This contains personal information about the voter, such as their address, district, date of birth, gender, etc. 
+![](VoterRegDS.png)
 
+Many of these columns (like Precinct, District, City, & Zip Code) could be derived from each other and had limited unique predictive value, so we eliminated them. There were other columns (like Phone Number and Email Address) that would not have helped us predict either, so they were eliminated.
+
+These datasets were huge (>10GB) so eliminating redundant columns was an important step to make sure we don’t max out our RAM when doing operations.
+
+##### Voter History
+
+We also had records of every ballot cast in the past 85 elections in Florida from 2006-2016 in our Voter History file for each county. Each vote cast was linked by ID (e.g. 100005820) to a person in the previously mentioned Voter Registration file.
 ![](VoterHistoryDS.png)
 
-The second data set contained information about the voter such as his or her address, district, date of birth and so on.Below is an example of what the data looked like in this data set. How ever a lot of there columns were data that could be derieved from other columns, duplicates or data thatnot predictive of voter turn out thus moved on to clean the data to make it focused.
-
-![](VoterRegDS.png)
 
 #### Data Cleaning
 
-The first step we took in data cleaning was to merge the two files. We merged on id as upon look at the two data sets we saw that each voter had an id which was unique and this id was in both file to represent that particular voter. This merge was also done to capture all registered voters in the state regardless of whether he/she voted in a particular election. If the individual did not vote he/she would have an NaN under the election data column (number 22 below). Upon merging we have 250 million rows of voters for the entire state so we quickly moved on to drop column that we deemed were represented by other column or not predictive of voter turn out. For example we dropped street address as it is not really relevant to whether the individual will voter and is specific to each voter whereas we kept zip code because sip code can represent entire demographic or ethnicity and thus can play a role in voter turn out. Similiarly we dropped middle name as we already have id to indetify the use and first and last name thus keeping it would be repeatitive. Below is an image of the data frame after this cleaning.
-
+The first step we took in data cleaning was to merge the two files. We merged on id as upon look at the two data sets we saw that each voter had an id which was unique and this id was in both file to represent that particular voter. This merge was also done to capture all registered voters in the state regardless of whether he/she voted in a particular election. If the individual did not vote he/she would have an NaN under the election data column (number 22 below). Upon merging we have 250 million rows of voters for the entire state so we quickly moved on to drop column that we deemed were represented by other columns or not predictive of voter turnout. For example we dropped street address as it is not really relevant to whether the individual will voter and is specific to each voter whereas we kept zip code because zip code can represent entire demographic or ethnicity and thus can play a role in voter turnout. Similarly we dropped middle name as we already have ID to identify the use and first and last name thus keeping it would be repetitive. Below is an image of the data frame after this cleaning.
 ![](Clean1.png)
 
-We knew that this was still a huge data set to work with and it contained a lot of duplicaties. Thus we moved on to further clean the data by reducing the data to just include the general election by removing instances of “PPP (special, local, etc.), “PRI” (Primary Elections), and “OTH” (Other). The data was reduced to include only general elections because historically the the general election has the highest turnout and because Florida has a closed primary which heavily affect the primary elections voter turnout. Below is an image of what the data set looked like after this cleaning. 
+We knew that this was still a huge data set to work with and it contained a lot of duplicates. Thus we moved on to further clean the data by reducing the data to just include the general election by removing instances of “PPP (special, local, etc.), “PRI” (Primary Elections), and “OTH” (Other). The data was reduced to include only general elections because historically the the general election has the highest turnout and because Florida has a closed primary which heavily affect the primary elections voter turnout. Below is an image of what the data set looked like after this cleaning.
 
 ![](Clean2.png)
 
-As you can see  above Jaqueline votes frequently thus appear multiple time in the data set thus our next step was to intelligently had these duplicates such that each voter has only a single row! In order to do this we created column for each general election i.e "GEN16" and "GEN12" and indicated in this column whether the individual voted or not. This voted or not was determined by looking at the typeofvote section and filling it in the correct election column. Futhermore NaN were not removed as they represent individual that registered but did not vote which we thought was relevant thus NaN were instead turned into 0 and a vote was turned into 1 as shown in the secon image below.
+As you can see above Jaqueline votes frequently thus appear multiple time in the data set thus our next step was to intelligently had these duplicates such that each voter has only a single row! In order to do this we created column for each general election i.e "GEN16" and "GEN12" and indicated in this column whether the individual voted or not. This voted or not was determined by looking at the typeofvote section and filling it in the correct election column. Furthermore NaN were not removed as they represent individual that registered but did not vote which we thought was relevant thus NaN were instead turned into 0 and a vote was turned into 1 as shown in the second image below.
 
 ![](Clean3.png)
 
 ![](Clean4.png)
 
-Upon doing the above clean where an individual would have a 1 if he or she voted, made us notice some inconsitencies in teh data where we notice that individual can move district or switch political parties in between two election i.e general 2012 and general 2016. Thus we decide to employ the same clean method as described above but focus solely on 2016 thus removing the issue of voter changing district or parties. However, given more time we would like to look at each individual year i.e 2012. In addition, based off of "date of birth" we decided to add a column called age tot he data set so that we can see how voter turnout in various ethnicities varies later in our model. Lastly we choose to subsample the 10 million+ rows data set into a 100 000 samples, as logistic regression is a parametric test requiring a large sample size. We will also be using a large number of dummy variables, so our sample size needed to be larger than our number of predictors. 
+Upon doing the above clean where an individual would have a ‘1’ if he or she voted, made us notice some inconsistencies in the data where we notice that individual can move district or switch political parties in between two election i.e general 2012 and general 2016. Thus we decide to employ the same clean method as described above but focus solely on 2016 thus removing the issue of voter changing district or parties. However, given more time we would like to look at each individual year i.e 2012. In addition, based off of "date of birth" we decided to add a column called age to the data set so that we can see how voter turnout in various ethnicities varies later in our model. Lastly we choose to subsample the 10 million+ rows data set into a 100 000 samples, as logistic regression is a parametric test requiring a large sample size. We will also be using a large number of dummy variables, so our sample size needed to be larger than our number of predictors.
 
-Below shows is an image of our data with the newly created age column:
+Below shown is an image of our data with the newly created age column:
 
 ![](Clean5.png)
 
-#### EDA
+In this particular study, NaNs are data-rich. For example, NaNs in the column “general” or “GEN16” meant that a registered voter had not voted in the election due to the merging between Voter History data and Registered Voter data. The NaN was later replaced with 0 so that a classification of 0/1 may be predicted later. Once the data was reduced to only the columns relevant for our analysis (age, race, district, political party, and voted/not), we randomly sampled 150,000 registered voters from the dataset. This was then further split to 100,000 for training and validation, and 50,000 for the final test analysis. The 150,000 sample had 431 missing values in our “age” variable. Before dropping these rows, we assessed whether there could have been an error in a particular county during voter registration collection especially since voter registration has historically been by hand. A closer look demonstrated that no more than 3% of any district was missing “age,” suggesting that the missing data is fairly evenly distributed across our counties and in relatively few instances. We feel comfortable that dropping these registered voters (rows) would maintain a representative sample of the population. The only other rows containing missing values relevant for our analysis was “First Name,” which was missing only twice in our 150,000 sample, and gender which was missing 10 times. Given the overall size of the dataset, these were also dropped.
 
-Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout. 
 
-Below is a graph show the voter turnout based on gender in the 2016 Florida general election. Based off this data we can immediately see that slightly more women voted then men in 2016, perhaps this has something to do with the candidates thoguh we won't talk about that here. 
+#### Exploratory Data Analysis (EDA)
+
+Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout.
+
+Below is a graph show the voter turnout based on gender in the 2016 Florida general election. Based off this data we can immediately see that slightly more women voted than men in 2016 (perhaps this has something to do with the candidates though we won't talk about that here).
+
 
 ![](GenderPlot.png)
 
-Next we looked explore how different age group voted and noticed that as the age group increased the percentage of voter turnout increased with a dramatic increase between the "under 35" age group and the "35 to 45" age group and a slight increase in all age groups after. 
+Next we looked explore how different age group voted and noticed that as the age group increased the percentage of voter turnout increased with a dramatic increase between the "under 35" age group and the "35 to 45" age group and a slight increase in all age groups after.
 
 ![](AgePlot.png)
 
-Then we moved on to see the vovter turnout per district, to see if particular district had significantly higher or lower turnout then others in the state. From this exploration we found LIB had the highest voter turnout in Florida's 2016 general election and GLA had the lowest. 
+Then we moved on to see the voter turnout per district, to see if particular district had significantly higher or lower turnout than others in the state. From this exploration we found LIB had the highest voter turnout in Florida's 2016 general election and GLA had the lowest.
 
 ![](DistrictPlot.png)
 
-Next, we looked at the type of vote distribution in the 2016 election and notice that most individuals registered did intend vote and that most individual voted at the polls, while 31% voted early and 28.3 voted absentee. Essentially, difference betweent the types of voting methods was not significant but it is important to note thata small fraction of registered voter did not vote.
+Next, we looked at the type of vote distribution in the 2016 election and notice that most individuals registered did intend vote and that most individual voted at the polls, while 31% voted early and 28.3 voted absentee. Essentially, difference between the types of voting methods was not significant but it is important to note that a small fraction of registered voter did not vote.
 
 ![](TypeVotePlot.png)
 
-Lastly, we looked at the breakdown of voters by "race" and the the percentage of each race that voted. This showed that a high percentage of White, non hispanics voted and but this proporation was not significantly higher then the proportion that voted in other ethinicties. Plot 1 below show the racial make up of the voter of Florida and Plot two shows the proportion of each race that voted.
+Lastly, we looked at the breakdown of voters by "race" and the the percentage of each race that voted. This showed that a high percentage of White, non hispanics voted and but this proportion was not significantly higher than the proportion that voted in other ethnicities. Plot 1 below show the racial make-up of the voter of Florida and Plot 2 shows the proportion of each race that voted.
 
 ![](RacePlot1.png)
 ![](RacePlot2.png)
 
-## Models
+## 3 / Ethnicity Imputation
 
-All models were built using exclusively our 100,000 sample from the Florida dataset. This was done by using a sample representative of the population.
+#### Motivation
+While we could use the information directly in the voter records to predict voter turnout, we hypothesize that imputing a person’s ethnicity from their name can enhance our prediction. Typically, we would throw out the datafield that has a person’s “name” because it is non-ordinal and is hard to make into a sensible categorical variable, but an ethnicity imputation from name allows us to make use of this otherwise neglected field.
 
-#### Logistic Regression
+#### Approach
+We made a baseline model that imputed ethnicity from name using a multinomial logistic regression. We then refined the model by allowing it to use race of a person as a “prior” to enhance the prediction.
 
-Our analysis uses the following variables in different analysis: District, political party, age, and gender and race to predict voter turnout. The result of this is included in Table X.  
+#### Literature Review
+There are a few major works that have been done on name-ethnicity classification, which is a subset of a larger field of natural language processing.
 
-These analyses were conducted using the 100,000 sample gathered in the data cleaning process.  While our 100,000 sample had 431 missing values in our “age” variable, a further look demonstrated that no more than 3% of any district was missing age. Most districts were missing less than 1%, while Washington County (WAS) was missing 3%. This suggests that the missing data is fairly evenly distributed across our counties, and relatively few instances, so we feel comfortable dropping these registered voters (rows). The only other rows containing missing values were columns dropped (like “First Name”). Dummy variables were implemented for categorical variables with more than 2 options (for example, gender was not a dummy variable).  All logistic regressions were performed with  5- fold cross validation with different alphas (1, 10, 100, 10000, or 100000) and L2 regularization. The scoring metric was “area under the curve.” 
+Computer scientists at Stony Brook (Ambekar et al., 2009) have been able to make a name ethnicity classifier using hidden Markov models and decision trees to classify names. They’ve achieved F1 scores for their ethnicities varying between .49 and .84 (most of them in the .70 range), depending on the ethnicity. While for a normal binary classification, .49 is abysmal, when choosing between 10+ categories, it is actually respectable.
 
-#### Assumptions of Logistic Regression
+Other researchers have used MaxEnt multinomial logistic regressions (Pervouchine et al., 2010) to make ethnicity classification decisions, achieving similar accuracies (they were able to top Ambekar’s accuracy on Asian names, with a .87 F1 score). 
 
-Logistic regression requires the dependent variable to be binary. Here, we are predicting whether of not a given person voted in the 2016 general election. The independent variables should be independent of each other. That is, the model should have little or no multicollinearity. The independent variables are linearly related to the log odds. Logistic regression requires quite large sample sizes, as the number of samples needs to exceed the number of prodictors (after dummy varibales are created)
-Because logistic regression uses MLE rather than OLS, it avoids many of the typical assumptions tested in statistical analysis. Does not assume normality of variables (both DV and IVs). Does not assume linearity between DV and IVs. Does not assume homoscedasticity. Does not assume normal errors. MLE allows more flexibility in the data and analysis because it has fewer restrictions.
+A MaxEnt model seems like a reasonable approach for us to start with, given that we have learned the intuitions behind multinomial logit regressions in class, and given that the research community prefers it.
+
+Citations:
+
+* Ambekar, A., Ward, C., Mohammed, J., Male, S., & Skiena, S. (2009, June). Name-ethnicity classification from open sources. In Proceedings of the 15th ACM SIGKDD international conference on Knowledge Discovery and Data Mining (pp. 49-58). ACM.
+* Pervouchine, V., Zhang, M., Liu, M., & Li, H. (2010, August). Improving name origin recognition with context features and unlabelled data. In Proceedings of the 23rd International Conference on Computational Linguistics: Posters (pp. 972-978). Association for Computational Linguistics.
+
+#### Choosing the Data
+There are a couple of ways to get lists of names paired with ethnicity. Some solutions include:
+
+* Lists of baby names by ethnicity familyeducation.com
+* Wikipedia Metadata Ethnicity List Scraped from Wikipedia
+
+For our base model, we chose the lists of baby names. Strengths of this data source include:
+* More specific ethnicity breakdowns (i.e. we can differentiate between Indian names vs Chinese names vs Vietnamese names)
+* Standard use of 26 character alphabet (Wikipedia has many foreign language characters like "ä" or "ü" on many names). Standard use is important because Florida voter datasets do not use these foreign characters.
+
+Weaknesses of the baby names data source include:
+* No way to tell the "frequency" of a name
+* Exclusion of less common names not associated with ethnicity
+
+Below are the ethnicities and the number of names we had for each:
+![](eth1.png)
+
+#### Preparing the name-ethnicity data
+
+##### Issue 1: Balancing
+We only have 169 Korean names, and 4143 French names. If we train a classifier on this data right off the bat, then we'll have something that may be unfairly biased towards French names. Frequency in this dataset does not correlate to real world frequency, so we balanced it to prevent unwanted bias.
+
+We undersampled from the larger N ethnicities and oversampled from the smaller N ethnicities to create a balanced dataset.
+
+##### Issue 2: Too many categories
+Choosing between 23 specific ethnicities accurately is more difficult than choosing between around 7 or 8 broadly defined ethnicities because:
+Having more choices to choose from in general creates more opportunities for classification errors
+Some ethnicities from similar parts of the world have overlapping names (like "Alexander" is a common Danish, Greek, and French name).
+Let's consolidate some groups that share name/cultural similarities. Let's also make equal sample sizes for each consolidated group, drawing evenly from each subgroup to prevent our classifier from ignoring "low frequency" ethnicities that are only low frequency due to the bias in our data set. (We would rebalance our dataset after consolidation.)
+
+### Training the Baseline Ethnicity Imputer
+
+The Baseline Imputer uses a MaxEnt multinomial logistic regression.
+
+#### Model Motivation
+
+Because the classifier has many ethnicities it can classify into (it's not just a binary decision), a multinomial logistic regression is appropriate as it can classify into several non-ordinal categorical dependent variables.
+
+This model is particularly useful because we can output a probability for our prediction, that becomes an indicator for how certain we are about our classification. A future iteration of model can choose to "abstain" from predicting when uncertain, thereby giving us an extremely accurate list voters for a certain ethnicity if we choose a conservative threshold.
+
+The Max Entropy technique (a type of multinomial logit regression) is widely used in the field of natural language classification, and is a good starting point for our task.
+
+#### Implementation
+
+For the baseline model, we adapted an open source implementation of a Max Entropy classifier (a type of multinomial logit regression) prepared by Github user Kitofans, who has created a wrapper around the actual NLTK Max Entropy algorithm to take in names as training features.
+
+What makes the Maximum Entropy unique is that during training, the NLTK classifier considers all probability distributions that are consistent with the training data that has been fed in, and it chooses the distribution with the highest entropy.
+
+We trained the baseline model on 50% of the names.
+
+Kitofan's wrapper here: https://github.com/kitofans/ethnicityguesser
+NLTK MaxEnt model: http://www.nltk.org/api/nltk.classify.html
+
+#### Testing the Baseline Model
+We tested the model on the remaining 50% of the names. Here’s a chart with some predictions:
+
+![](eth2.png)
+
+It doesn’t look bad. Let’s get some stats on it.
+
+![](eth3.png)
+
+Our ACCs (Overall accuracy scores) are super high, and our FPRs are very low, but these are actually misleading because they are inflated by our high True Negative count. We are using a one vs. rest calculation approach. This calculation approach leads to a high number of true negatives, because most guesses will simply not be the "one" ethnicity in question.
+
+The most useful metrics here are, in our opinion, **True Positive Rate/Sensitivity** (because it tells us how often we are predicting correctly within a given ethnicity), and the **Precision** (because it tells the likelihood of whether or not our guess is correct, once we make it).
+
+**F1 Score** is interesting because it gives us a harmonic mean of these two metrics (Precision an Sensitivity) so it can help us consider those important metrics two together.
+
+Unfortunately, we cannot test this model directly on the Voter Records, because we do not know the “True Ethnicities” for those people. However, if the forthcoming Voter Turnout Prediction Models improve significantly as a result of ethnicity imputation, that is a sign that our imputation is exposing some sort of truth about our voters that has an impact on turnout.
+
+#### Imputation onto Voter Records by Last Name.
+We imputed ethnicity based on last name. We came to this decision after an examination of the voter records, in which we saw that last names seemed to carry more ethnic markers than the first name. Example: Mark Perez is probably Hispanic and Joe Goldstein is probably Jewish, but their first names make it hard to tell. 
+
+Middle name was not considered because that was a missing piece of data for many individuals.
+
+![](eth4.png)
+
+An examination of the actual ethnicity imputations above show that it there are some tough calls to make. (e.g. Is “Beam” Jewish? Is “Kopren” Western European?) Perhaps our training data only has the “stereotypical” names, and does not reflect the reality of names in Florida.
+
+It would make sense at this point to test drive the names from the Wikipedia dataset, which may more organically represent the names present in our populace.
+
+### Revised Model
+
+For the revised model, we made the following tweaks:
+* Used “Race” as a prior (in effect, turning our Imputer into a decision tree, followed by a multinomial logit regression)
+* Used a larger dataset (Wikipedia name-ethnicity pairs)
+
+![](eth5.png)
+
+
+Because Race is provided in the Florida dataset, it makes sense to consider that as we choose an ethnicity. It can help us eliminate “categorical errors”. For example, by definition, a person of Indian Subcontinent descent is “Asian” in race. Therefore, if they did not select Asian, then we can prevent an “Indian Subcontinent” ethnicity imputation. We excluded Mixed Race people from our imputations to keep things simple, as we had enough data points in the Voter Records to train on already.
+
+We implemented this through a hand-made decision tree that first classified between White, Asian, Black, American Indian, and Hispanic based on the racial data directly provided, and then went an extra step to impute a more specific “ethnicity” via multinomial logit regression. We are hoping that ethnicity can provide our Voter Turnout model higher predictive power than a broad race category. Jewish people might participate politically different than other white people, and East Asians may differ from Indian Subcontinent people.
+
+We decided to leave American Indians as their own category, because their numbers are very low. We also decided to leave Hispanics as their own category, because we did not have a good name-ethnicity dataset that would allow us to make distinctions between sub-groups (like Guatemalans versus Ecuadorians). While there may be variations between names in Hispanic sub-groups, there is a large overlap, so it makes sense to treat them as one ethnic name-group.
+
+#### Testing the Revised Model
+Here we have another dilemma. Aside from not being able to test directly on Voter Records, we can’t perfectly test this model on a subset of our Wiki or Baby Names name-ethnicity dataset either, because they do not have race information associated with them.
+
+To get around this, we tested our Black ethnicity classifier, White ethnicity classifier, and Asian ethnicity classifier upon a subset of the test data, excluding those datapoints whose true values were categorically excluded from being Black, White, or Asian. We used the same overall test set as we did for our baseline model, to ensure maximum consistency.
+
+Our test results are below.
+
+![](eth6.png)
+
+![](eth7.png)
+
+![](eth8.png)
+
+![](eth9.png)
+
+#### Interpretation
+
+Overall, our revised model performs better on Asian and Black people, “perfectly” on Hispanics and American Indians, and worse on White people, as indicated by Sensitivity and F1 scores.
+
+Previously, our F1 scores for people of White descent had been .56 (Jewish), .59 (Western Euro) and .72 (Eastern Euro). Now they are .52, .57 and .59 respectively, indicating an overall decrease in accuracy for White people. This is adverse, because the vast majority of people in Florida are White.
+
+Previously, our F1 scores for those potentially of Asian descent had been .78 (East Asian) and .76 (Indian). Now they are .83 and .80 respectively, indicating a slight increase in performance.
+
+Previously, we were unable to detect Black people (their names are similar to Whites, so they’d be classified as European typically. Now we can detect them, although with limited accuracy (.77 F1 for Blackamericans).
+
+Our hopes would be that the increase in performance from being able to classify Hispanics will offset the unclear losses/gains in performance on other ethnicities.
+
+#### Abstaining from prediction
+Thanks to the nature of our multinomial regression making classifications based on likelihood scores, we can tell in a way how “certain” our prediction is. Because we do not need to use every single data point in Florida to build our model, we can abstain from predicting ethnicity on the names that we are unsure about.
+
+In our final classification model, we abstained from predicting when the negative log of the likelihood was below -.75 . What this translated to was that we only predicted around 40% of the time on the Voter Records. This was enough to give us a substantial training set for our Voter Turnout prediction model below.
+
+Here on, our Baseline Ethnicity Imputer may be referred to as the “Old Ethnicity” imputation, and the revised model that uses Race and abstains when uncertain will be referred to as the “New Ethnicity” imputation.
+
+## 4 / Voter Turnout Prediction Models
+
+## 5 / Conclusions
