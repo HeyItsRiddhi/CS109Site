@@ -60,7 +60,7 @@ This contains personal information about the voter, such as their address, distr
 
 Many of these columns (like Precinct, District, City, & Zip Code) could be derived from each other and had limited unique predictive value, so we eliminated them. There were other columns (like Phone Number and Email Address) that would not have helped us predict either, so they were eliminated.
 
-These datasets were huge (>10GB) so eliminating redundant columns was an important step to make sure we don’t max out our RAM when doing operations. As one may expect, the size of the dataset caused us to accidentally collect a sample that was not representative of the population. The data cleaning had to be performed prior to sampling. Given the size of the data, the cleaning took approximately two days. 
+These datasets were huge (>10GB) so eliminating redundant columns was an important step to make sure we don’t max out our RAM when doing operations. 
 
 ##### Voter History
 
@@ -70,14 +70,16 @@ We also had records of every ballot cast in the past 85 elections in Florida fro
 
 #### Data Cleaning
 
+As one may expect, the size of the dataset led us to accidentally collect a sample that was not representative of the population for milestones 1-3. Before starting this final milestone, the data cleaning had to be rerun. We cleaed the data prior to sampling in this milestone. Given the size of the data, the cleaning took approximately two days. 
+
 The first step we took in data cleaning was to merge the two files. We merged on id as upon look at the two data sets we saw that each voter had an id which was unique and this id was in both file to represent that particular voter. This merge was also done to capture all registered voters in the state regardless of whether he/she voted in a particular election. If the individual did not vote he/she would have an NaN under the election data column (number 22 below). Upon merging we have 250 million rows of voters for the entire state so we quickly moved on to drop column that we deemed were represented by other columns or not predictive of voter turnout. For example we dropped street address as it is not really relevant to whether the individual will voter and is specific to each voter whereas we kept zip code because zip code can represent entire demographic or ethnicity and thus can play a role in voter turnout. Similarly we dropped middle name as we already have ID to identify the use and first and last name thus keeping it would be repetitive. Below is an image of the data frame after this cleaning.
 ![](Clean1.png)
 
-We knew that this was still a huge data set to work with and it contained a lot of duplicates. Thus we moved on to further clean the data by reducing the data to just include the general election by removing instances of “PPP (special, local, etc.), “PRI” (Primary Elections), and “OTH” (Other). The data was reduced to include only general elections because historically the the general election has the highest turnout and because Florida has a closed primary which heavily affect the primary elections voter turnout. Below is an image of what the data set looked like after this cleaning.
+We knew that this was still a huge data set to work with and it contained a lot of duplicates (the same person votes many times over the course of 85 elections!). Thus we moved on to further clean the data by reducing the data to just include the general election by removing instances of “PPP (special, local, etc.), “PRI” (Primary Elections), and “OTH” (Other). The data was reduced to include only general elections because historically the the general election has the highest turnout and because Florida has a closed primary which heavily affect the primary elections voter turnout. Below is an image of what the data set looked like after this cleaning.
 
 ![](Clean2.png)
 
-As you can see above Jaqueline votes frequently thus appear multiple time in the data set thus our next step was to intelligently had these duplicates such that each voter has only a single row! In order to do this we created column for each general election i.e "GEN16" and "GEN12" and indicated in this column whether the individual voted or not. This voted or not was determined by looking at the typeofvote section and filling it in the correct election column. Furthermore NaN were not removed as they represent individual that registered but did not vote which we thought was relevant thus NaN were instead turned into 0 and a vote was turned into 1 as shown in the second image below.
+As you can see above Jaqueline votes frequently thus appear multiple time in the data set thus our next step was to intelligently had these duplicates such that each voter has only a single row! In order to do this we created column for each general election i.e "GEN16" and "GEN12" and indicated in this column whether the individual voted or not based on the election date. This voted or not was determined by looking at the typeofvote section, the date of the election, and filling it in the correct election column. Furthermore NaN were not removed as they represent individual that registered but did not vote which we thought was relevant thus NaN were instead turned into 0 and a vote was turned into 1 as shown in the second image below. 
 
 ![](Clean3.png)
 
@@ -94,7 +96,7 @@ In this particular study, NaNs are data-rich. For example, NaNs in the column �
 
 #### Exploratory Data Analysis (EDA)
 
-Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout.
+Now that we had a clean sampled data set, we began to explore the data for the 2016 election to see how various variable such as gender affected voter turnout. Our EDAs were the first cue that we lacked a representative sample in milestone 3. 
 
 Below is a graph show the voter turnout based on gender in the 2016 Florida general election. Based off this data we can immediately see that slightly more women voted than men in 2016 (perhaps this has something to do with the candidates though we won't talk about that here).
 
@@ -264,7 +266,7 @@ Previously, we were unable to detect Black people (their names are similar to Wh
 Our hopes would be that the increase in performance from being able to classify Hispanics will offset the unclear losses/gains in performance on other ethnicities.
 
 #### Abstaining from prediction
-Thanks to the nature of our multinomial regression making classifications based on likelihood scores, we can tell in a way how “certain” our prediction is. Because we do not need to use every single data point in Florida to build our model, we can abstain from predicting ethnicity on the names that we are unsure about.
+Thanks to the nature of our multinomial regression making classifications based on likelihood scores, we can tell in a way how “certain” our prediction is. Because we do not need to use every single data point in Florida to build our model, we can abstain from predicting ethnicity on the names that we are unsure about. This allows our predictions to have high precision, though low recall. 
 
 In our final classification model, we abstained from predicting when the negative log of the likelihood was below -.75 . What this translated to was that we only predicted around 40% of the time on the Voter Records. This was enough to give us a substantial training set for our Voter Turnout prediction model below.
 
@@ -272,7 +274,7 @@ Here on, our Baseline Ethnicity Imputer may be referred to as the “Old Ethnici
 
 ## 4 / Voter Turnout Prediction Models
 
-We aim to build a model for voter turnout that classifies whether or not a registered voter casted a ballot in the 2016 election. We explore a total of four classifiers using a training and validation set: Logistic Regression, Decision Tree, Random Forest, and AdaBoost. These four models are described below, and each performance on the validation set is included in table X. The final chosen model, our Adaboost model received a score of .817 on the test set
+We aim to build a model that classifies whether a registered voter did indeed cast a ballot in the 2016 election. We explore a total of four classifiers using a training and validation set: Logistic Regression, Decision Tree, Random Forest, and AdaBoost. These four models are described below, and each performance on the validation set is included in table X. Our models ran on three variants of the dataset: predictors including only race, predictors including race and ethnicity (earlier model), and predictors including race and conservative ethnicity. The “abstain” predictions were dropped to allow the model to have a highly precise sample of each ethnicity (though low recall). The final chosen model, our Adaboost model received a score of .81 on the test set, regardless of race, ethnicity, or conservative ethnicity prediction. 
 
 ### The Logistic Model
 
@@ -329,6 +331,37 @@ The decision trees performed similarly regardless of whether we used the new eth
 
 ![](kimia6.png)
 
-< Add William's work here > 
+### Random Forests
+Random forests combine an ensemble of independent decision trees for making classifications. This is a modified form of bootstrap aggregating (bagging), which takes independent and identically distributed samples and fits a decision tree to each. To solve the problem of correlation between trees that bagging faces, random forests use different predictors when creating the trees. When implementing a random forest, the first step is creating an ensemble of full trees, which are trained on a bootstrapped sample of the training set. For creating each tree, a subset of the predictors are randomly selected, and a predictor from the subset is used for splitting. Then the predictions from the trees are averaged to make a classification.
+
+One benefit of utilizing random forests is that they are not usually susceptible to overfitting as the number of trees increase, since the trees are not correlated. Accuracy increases, meaning that the forest can perform better than a single decision tree. However, there are certain situations where random forests can perform poorly. One example is the case where there are a large number of predictors and only a few are relevant for making predictions. As a result, many trees with no predictive power might get fitted, making the classifier less accurate.
+
+In our implementation, we used 5-fold cross validation to determine the optimal number of predictors. Between 40 and 50 predictors was determined to be the optimal value to use for each tree. Accuracy was 0.815 for the first test set and 0.76 for the second, which was reasonably good.
+
+### AdaBoost
+
+Finally, we used AdaBoost, which stands for adaptive boosting. The idea for boosting is to make simple decision trees more expressive, reducing their bias. Boosting iteratively builds a more complex model using simpler models, and each new simple model improves on the weaknesses of the complex model. AdaBoost specifically is used in classification, to minimizing classification error with an exponential loss function.
+
+AdaBoost is quite useful and simple. It only requires selecting the kinds of trees used and the learning rate, which helps the model improve its classifications. However AdaBoost can overfit, and also does not perform well when there is too much noise in the data. The following plots show the classification accuracy on the training and test set, for different depths and numbers of trees. Overfitting is an issue, which is clearly seen because the accuracy on the training set is much higher than that of the test set. This becomes an increasingly big issue at larger tree depths.
+
+We utilized 5-fold cross validation to determine the optimal parameters used in AdaBoost, helping to prevent overfitting. Optimal depth was determined to be 2 and the number of trees was determined to be 64. Ultimately, AdaBoost yielded the most accurate results, with 0.844 on the first test set and 0.812 on the second.
+
+### The Test Set 
+
+We chose Adaboost to run our final test data, as it consistently performed the highest on validation sets across all three datasets: without race, with ethnicity, and with our finer-grained ethnicity tool in both the test and validation set. This suggests that race and ethnicity are not significant predictors in classifying someone as having turned out to the voting booth. 
+
+Though there were many robust classification techniques used in this project, there are some shortcomings that may detract from the results. Because the proportion of people who vote is close to 0.8, the results of the classification are similar to the classification accuracy of predicting that everyone voted. It is likely that many factors that determine whether or not someone votes are idiosyncratic, and not dependent on their characteristics that we use to group them. The proportions across ethnic groups, districts, ages, and genders are still relatively similar.
+
+While the large amount of data available provides a lot of information and gives robustness to our conclusions, it makes it easier to generalize about a specific group of people (e.g. knowing that 80% of registered voters between 30 and 40 voted), but does not necessarily give insights on individual voting behavior.  Additionally, the dataset built with the conservative ethnicity classifier may have performed poorly on the validation because it was not representative of the population. The “abstain” predictions were dropped to allow the model to have a highly precise sample of each ethnicity (though low recall). Therefore, the predicted ethnic groups are representative of those ethnic minorities but together the dataset was not representative of the overall population (as it is highly precise with low recall). 
+
+
 
 ## 5 / Conclusions
+
+As the US population becomes more diverse, we expect growing ethnic communities to play a more pivotal role in shaping American politics. However, this analysis suggests that the electoral landscape is more contingent on age, political affiliation, and community/district. The models suggest that ethnicity has little to no impact on voter turnout. The implications of this suggests that political groups or activist groups, such as non-profit organizations like “Rock the Vote” aimed at increasing voter turnout, should not direct efforts at specific ethnic groups. Instead, these groups should focus on younger voters (as shown by the Decision Tree), independent, no-party-affiliation voters (as shown by the Decision Tree), and voters in certain Florida districts (as shown by the Logistic Regression). 
+
+However, our analysis was not exhaustive and interaction effects were not considered. While the implications of this analysis suggest that efforts to increase voter turnout should not focus on ethnic groups, the cost of an incorrect conclusion could be detrimental for the American democracy. This is especially true as the logistic analysis showed the beta coefficient for the “white” race to be positively affiliated with voter turnout. 
+
+Future analysis should focus on the interaction effects of ethnicities and races with demographics (like age, political party, etc) and household income (by person and district). Comparing subgroups (i.e. white v minority, 2012 election v 2016 election) may be more informative for future models. Additionally, future analysis should assess the confidence at which classifications are being made (and seeing if classifications made with greater confidence are actually more accurate, which could suggest that a certain combination of factors may impact turnout. 
+
+
