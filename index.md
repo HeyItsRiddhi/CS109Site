@@ -47,6 +47,7 @@ Through an official public information request to the Florida government, we had
 The figure below shows the racial diversity of Florida:
 
 ![](FloridaMinority.jpg)
+
 Each zip code is colored by the percent minority registered voters. As you can see, south Florida has almost entirely minority communities. Southern Florida is diverse (large minority populations) while the counties north and inland tend to vary or be predominantly white.
 
 #### Voter Records: 2 Parts
@@ -56,6 +57,7 @@ For each county, we have two files: (1) a **Voter Registration record**, and (2)
 ##### Voter Registration
 
 This contains personal information about the voter, such as their address, district, date of birth, gender, etc. 
+
 ![](VoterRegDS.png)
 
 Many of these columns (like Precinct, District, City, & Zip Code) could be derived from each other and had limited unique predictive value, so we eliminated them. There were other columns (like Phone Number and Email Address) that would not have helped us predict either, so they were eliminated.
@@ -65,6 +67,7 @@ These datasets were huge (>10GB) so eliminating redundant columns was an importa
 ##### Voter History
 
 We also had records of every ballot cast in the past 85 elections in Florida from 2006-2016 in our Voter History file for each county. Each vote cast was linked by ID (e.g. 100005820) to a person in the previously mentioned Voter Registration file.
+
 ![](VoterHistoryDS.png)
 
 
@@ -73,6 +76,7 @@ We also had records of every ballot cast in the past 85 elections in Florida fro
 As one may expect, the size of the dataset led us to accidentally collect a sample that was not representative of the population for milestones 1-3. Before starting this final milestone, the data cleaning had to be rerun. We cleaed the data prior to sampling in this milestone. Given the size of the data, the cleaning took approximately two days. 
 
 The first step we took in data cleaning was to merge the two files. We merged on id as upon look at the two data sets we saw that each voter had an id which was unique and this id was in both file to represent that particular voter. This merge was also done to capture all registered voters in the state regardless of whether he/she voted in a particular election. If the individual did not vote he/she would have an NaN under the election data column (number 22 below). Upon merging we have 250 million rows of voters for the entire state so we quickly moved on to drop column that we deemed were represented by other columns or not predictive of voter turnout. For example we dropped street address as it is not really relevant to whether the individual will voter and is specific to each voter whereas we kept zip code because zip code can represent entire demographic or ethnicity and thus can play a role in voter turnout. Similarly we dropped middle name as we already have ID to identify the use and first and last name thus keeping it would be repetitive. Below is an image of the data frame after this cleaning.
+
 ![](Clean1.png)
 
 We knew that this was still a huge data set to work with and it contained a lot of duplicates (the same person votes many times over the course of 85 elections!). Thus we moved on to further clean the data by reducing the data to just include the general election by removing instances of “PPP (special, local, etc.), “PRI” (Primary Elections), and “OTH” (Other). The data was reduced to include only general elections because historically the the general election has the highest turnout and because Florida has a closed primary which heavily affect the primary elections voter turnout. Below is an image of what the data set looked like after this cleaning.
